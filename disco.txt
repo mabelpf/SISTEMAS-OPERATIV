@@ -1,0 +1,240 @@
+from heapq import *
+from tkinter import *
+import tkinter as tk
+ 
+
+# pc es inicio de la posicion del cabezal 
+# y peticiones es la lista de las peticiones
+#  200 pistas
+def init(self):
+    
+    self.ventana = Tk()
+    self.ventana.title("GESTION DE DISCO")
+    
+def FCFS(pc,peticiones): 
+    tiempo = 0
+    n = len(peticiones)
+    pos = pc
+    for peticion in peticiones:
+        tiempo += abs(peticion-pos)
+        pos = peticion
+        print("        ",pos,"  buscado con ",tiempo, "sg de tiempo")
+
+# caculo del promedio del tiempo de busqueda
+    pro_tiempo_busq = tiempo / n
+    return pro_tiempo_busq
+
+# Shortest Seek Time First
+def SSTF(pc,peti):
+    peticiones= peti.copy()
+    tiempo = 0
+    posicion = pc
+    n = len(peticiones)
+    heap=[]
+    while len(peticiones)>0:
+        for p in peticiones:
+            heappush(heap,(abs(posicion-p),p))
+        x=heappop(heap)[1]
+        tiempo+=abs(posicion-x)
+        posicion=x
+        print("        ",x,"  buscado",tiempo, "sg de tiempo")
+        peticiones.remove(x)
+        heap=[]
+        
+# caculo del promedio del tiempo de busqueda
+    pro_tiempo_busq = tiempo/n
+    return pro_tiempo_busq
+
+def SCAN(pc,peti):
+    peticiones = peti.copy()
+    pos = pc
+    tiempo = 0
+    fin=200
+    ini=0
+# buscar desde la posicion actual hasta el final qu es 200
+    for i in range(pos,fin+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+            
+    tiempo+=abs(pos-fin)
+    pos=fin
+#volver para empezar
+    for i in range(fin,ini-1,-1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            # imprimir(tiempo)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+    
+# caculo del promedio del tiempo de busqueda
+    pro_tiempo_busq = tiempo/n
+    return pro_tiempo_busq
+
+def C_SCAN(pc,peti):
+    peticiones = peti.copy()
+    pos = pc
+    tiempo = 0
+    fin=200
+    ini=0
+    # buscar desde la posicion actual hasta el final qu es 200
+    for i in range(pos,fin+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+    tiempo+=abs(pos-fin)
+    pos=fin
+    #buscar para pc desde el inicio
+    for i in range(ini,pc+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+
+# calculo del promedio del tiempo de busqueda
+    pro_tiempo_busq = tiempo/n
+    return pro_tiempo_busq
+
+def LOOK(pc,peti):
+    peticiones = peti.copy()
+    pos = pc
+    tiempo = 0
+    fin=max(peticiones)
+    ini=min(peticiones)
+
+    for i in range(pos,fin+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+
+    for i in range(fin,ini-1,-1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+    
+
+    pro_tiempo_busq = tiempo/n
+    return pro_tiempo_busq
+
+def C_LOOK(pc,peti):
+    peticiones = peti.copy()
+    pos = pc
+    tiempo = 0
+    fin=max(peticiones)
+    ini=min(peticiones)
+#busqueda dede pos hasta el maximo de la lista de peticio
+    for i in range(pos,fin+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+
+    tiempo+=abs(pos-ini)
+    pos=ini
+
+    for i in range(ini,pc+1):
+        if i in peticiones:
+            tiempo+=abs(pos-i)
+            pos=i
+            print("        ",i,"  buscado",tiempo, "sg de tiempo")
+            peticiones.remove(i)
+
+
+    pro_tiempo_busq = tiempo/n
+    return pro_tiempo_busq
+self.ventana.title("GESTION DE DISCO") #Cambiar el nombre de la ventana 
+self.ventana.geometry("520x480") #Configurar tamaño 
+self.ventana.config(bg="tan") #Cambiar color de fondo
+
+if _name=='main_':
+    print("--------------PLANIFICADOR de DISCO----------------")
+    print("numero de peticiones: ")
+    n = int(input())
+    print("pista inicial del disco(total=200)")
+    pc = int(input())
+    while pc>200:
+        print("!!! error !!! intenta de nuevo")
+        pc = int(input())
+    print("inserte las pistas  : maximo es 200")
+    peticiones = []
+    for i in range(n):
+        pet = int(input())
+        peticiones.append(pet)
+
+    print(peticiones)
+    print(" ")
+
+    print("  ****     FCFS       ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para fcfs es ",
+          FCFS(pc,peticiones))
+    print(" ")
+    print("  ****     SSTF       ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para sstf es ",
+          SSTF(pc,peticiones))
+    print(" ")
+    print("  ****     SCAN       ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para scan es ",
+          SCAN(pc,peticiones))
+    print(" ")
+    print("  ****     C-SCAN     ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para C-scan es ",
+          C_SCAN(pc,peticiones))
+    print(" ")
+    print("  ****     LOOK       ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para look es ",
+          LOOK(pc,peticiones))
+    print(" ")
+    print("  ****     C-LOOK     ***")
+    print(" ")
+    print("Promedio del tiempo de busqueda para C-look es ",
+          C_LOOK(pc,peticiones))
+    print(" ")
+    print("-----------------------------------------------------------")
+
+#ventana.title("GESTION DE DISCO") #Cambiar el nombre de la ventana 
+miFrame=Frame(raiz,width=1200,height=1200)
+miFrame.pack()
+
+n=Entry(miFrame)
+n.grid(row=0,column=1,padx=10,pady=10)
+
+pc=Entry(miFrame)
+pc.grid(row=0,column=3,padx=10,pady=10)
+
+peticiones=Entry(miFrame)
+peticiones.grid(row=1,column=1,padx=10,pady=10)
+
+grafico=Entry(miFrame)
+grafico.grid(row=2,column=0,padx=10,pady=10,ipady=100,ipadx=200, columnspan=4,)
+grafico.config(background="sky blue",justify="right")
+
+w=Button( miFrame,text="ok",width=5)
+w.grid(row=1,column=2,padx=10,pady=10,sticky="w")
+
+npet=Label(miFrame,text="Numero de peticiones: ")
+npet.grid(row=0,column=0,padx=10,pady=10,sticky="e")
+
+pini=Label(miFrame,text="pista inicial del disco: ")
+pini.grid(row=0,column=2,padx=10,pady=10,sticky="e")
+
+pet=Label(miFrame,text="inserte las pistas : ")
+pet.grid(row=1,column=0,padx=10,pady=10,sticky="e")
+
+
+self.ventana.mainloop()
